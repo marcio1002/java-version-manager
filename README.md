@@ -6,7 +6,7 @@
 
 ## Features
 
-- List installed Java versions from Chocolatey
+- List installed Java versions
 - Display the currently active Java version
 - Switch Java version in the current terminal session
 - Optional output of the full Java binary path
@@ -96,7 +96,6 @@ Set-JAvaVersion jdk17 -Target Machine
 
 - Windows 10 or 11
 - PowerShell 5.1+ or PowerShell Core
-- Java installed via Chocolatey (or any method, as long as paths are correctly set)
 - `$Global:JavaVersions` configured as shown above
 
 ---

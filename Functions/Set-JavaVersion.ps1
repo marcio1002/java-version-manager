@@ -14,7 +14,7 @@ function Set-JavaVersion {
     )
 
     if (-not $Global:JavaVersions) {
-        Write-Host -ForegroundColor Red "Nenhuma versão encontrada"
+        Write-Host -ForegroundColor Red "Nenhuma versão encontrada nas variáveis de ambiente de `$Global:JavaVersions"
         return
     }
 
@@ -25,16 +25,28 @@ function Set-JavaVersion {
 
     [string] $currentVersionJava = [System.Environment]::GetEnvironmentVariable('JAVA_HOME', $Target) ?? ''
     [string] $path = [System.Environment]::GetEnvironmentVariable('PATH', $Target)
-    [string] $selectedVersion = $Global:JavaVersions[$Version]
+    [string] $selectedJavaVersion = $Global:JavaVersions[$Version]
 
-    if ($selectedVersion -eq $currentVersionJava) {
+    if ($selectedJavaVersion -ieq $currentVersionJava) {
         return
     }
 
-    [System.Environment]::SetEnvironmentVariable('JAVA_HOME', $selectedVersion, 'Process')
+    Write-Host "$currentVersionJava -> $selectedJavaVersion"
 
-    $path = $path.Replace("$currentVersionJava\bin", "$selectedVersion\bin")
-    [System.Environment]::SetEnvironmentVariable('PATH', $path, 'Process')
+    $pathSplit = New-Object System.Collections.ArrayList
 
-    Write-Host -ForegroundColor Green "Versão java definida: $Version"
+    $path.Split(";") | ForEach-Object {
+        $currentPath = $_
+
+        [void]$pathSplit.Add(
+            $currentPath -eq "$currentVersionJava\bin" ? "$selectedJavaVersion\bin" : $currentPath
+        )
+    }
+
+    $path = $pathSplit -join ";"
+
+    [System.Environment]::SetEnvironmentVariable('JAVA_HOME', $selectedJavaVersion, $Target)
+    [System.Environment]::SetEnvironmentVariable('PATH', $path, $Target)
+
+    Write-Host -ForegroundColor Green "Agora você esta utilizando: $Version"
 }

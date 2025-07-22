@@ -28,7 +28,7 @@ function Get-JavaVersion {
     )
 
     if (-not $Global:JavaVersions) {
-        Write-Host -ForegroundColor Red "Nenhuma versão encontrada"
+        Write-Host -ForegroundColor Red "Nenhuma versão encontrada nas variáveis de ambiente de `$Global:JavaVersions"
         
         return
     }
